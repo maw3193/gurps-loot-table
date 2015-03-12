@@ -1,11 +1,15 @@
 #!/usr/bin/lua
 
 require "helpers"
-local treasure = require "treasure-table"
+require "treasure-table"
 
 math.randomseed(os.time())
+local item_count = arg[1] or 10
 
---print(roll("1d, 1d, 1d"))
+for i=1, item_count do
+    --print(write_item(get_treasure()))
+    print(write_item(get_spice{qty=math.random(1, 3),
+                               decor=math.random(0, 2)}))
+end
 
---print(write_item(get_item()))
-print(write_table(expand_table(treasure)))
+

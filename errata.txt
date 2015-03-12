@@ -1,0 +1,6 @@
+Item curses:
+6, 5 - Willful Device, -0.25CF
+The item requires a turn of concentration and a Will roll to activate
+
+6, 6 - Very Willful Device, -0.5CF
+The item's enchantments require a turn of concentration and a Quick Contest of Will against 10 + number of enchantments + 1d

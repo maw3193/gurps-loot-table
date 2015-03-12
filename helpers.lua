@@ -20,32 +20,32 @@ function sum_dice(x, y)
     return sum
 end
 
-function roll(dice) --dice of form "1d, 1d, 1d"
+function roll_string(dice) --dice of form "1d, 1d, 1d"
     -- XdY
     local startpos, endpos, x, y = dice:find("(%d+)d(%d+)")
     if (startpos and endpos and x and y) then
-        return roll(dice:sub(1, startpos - 1)
+        return roll_string(dice:sub(1, startpos - 1)
                     .. sum_dice(x, y)
                     .. dice:sub(endpos + 1))
     end
     -- Nd
     local startpos, endpos, n = dice:find("(%d+)d")
     if (startpos and endpos and n) then
-        return roll(dice:sub(1, startpos - 1)
+        return roll_string(dice:sub(1, startpos - 1)
                     .. sum_dice(n, 6)
                     .. dice:sub(endpos + 1))
     end
     -- A + B
     local startpos, endpos, a, b = dice:find("(%d+)%s*+%s*(%d+)")
     if (startpos and endpos and a and b) then
-        return roll(dice:sub(1, startpos - 1)
+        return roll_string(dice:sub(1, startpos - 1)
                     .. a + b
                     .. dice:sub(endpos + 1))
     end
     -- A - B
     local startpos, endpos, a, b = dice:find("(%d+)%s*-%s*(%d+)")
     if (startpos and endpos and a and b) then
-        return roll(dice:sub(1, startpos - 1)
+        return roll_string(dice:sub(1, startpos - 1)
                     .. a - b
                     .. dice:sub(endpos + 1))
     end
