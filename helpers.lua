@@ -42,6 +42,14 @@ function roll_string(dice) --dice of form "1d, 1d, 1d"
                     .. a + b
                     .. dice:sub(endpos + 1))
     end
+    -- A-B (between one an another)
+    local startpos, endpos, a, b = dice:find("(%d+)-(%d+)")
+    if (startpos and endpos and a and b) then
+        return roll_string(dice:sub(1, startpos - 1)
+                    .. math.random(a, b)
+                    .. dice:sub(endpos + 1))
+    end
+
     -- A - B
     local startpos, endpos, a, b = dice:find("(%d+)%s*-%s*(%d+)")
     if (startpos and endpos and a and b) then

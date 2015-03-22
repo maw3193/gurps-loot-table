@@ -1,12 +1,12 @@
 require "spices"
 
 treasure_table = {
-    ["1, 1, 1-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1},
-    ["1, 1, 6"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1},
-    ["1, 2, 1-2"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2},
-    ["1, 2, 3"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=2},
-    ["1, 2, 4-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3},
-    ["1, 2, 6"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=3},
+    ["1, 1, 1-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1, cb=get_contained_spice},
+    ["1, 1, 6"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1, cb=get_contained_spice},
+    ["1, 2, 1-2"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2, cb=get_contained_spice},
+    ["1, 2, 3"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=2, cb=get_contained_spice},
+    ["1, 2, 4-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3, cb=get_contained_spice},
+    ["1, 2, 6"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=3, cb=get_contained_spice},
     ["1, 3, 1-6"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1},
     ["1, 4, 1-3"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2},
     ["1, 4, 4-6"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3},
@@ -163,11 +163,47 @@ treasure_table = {
 
 expand_table(treasure_table)
 
-function get_treasure()
-    local roll_result = roll_string("1d, 1d, 1d")
+function get_treasure(rollstr)
+    local roll_result = roll_string(rollstr or "1d, 1d, 1d")
     local treasure_entry = treasure_table[roll_result]
-    if treasure_entry.name == "Spices" then
-        return get_spice(treasure_entry)
+    local item
+    -- Get specific item
+    if treasure_entry.cb then
+        item = treasure_entry:cb()
+    else
+        item = treasure_entry
     end
-    return treasure_entry
+    item.type = treasure_entry.name
+    -- Get decorations
+    if treasure_entry.decor > 0 then
+        item.decorations = {}
+        for i=1, treasure_entry.decor do
+            local decors = get_decoration(item.soft)
+            for j,decor in ipairs(decors) do
+                table.insert(item.decorations, decor)
+            end
+        end
+    end
+    item.total_weight = item.weight
+    item.cf = 0
+    local decor_cost = 0
+    -- Decorations do not add weight, contents do.
+    if item.decorations then
+        for i,decoration in ipairs(item.decorations) do
+            if decoration.cf then
+                item.cf = item.cf + decoration.cf
+            end
+            if decoration.cost then
+                decor_cost = decor_cost + decoration.cost
+            end
+        end
+    end
+    item.total_cost = item.cost * (1 + item.cf) + decor_cost
+    if item.contents then
+        for i,content in ipairs(item.contents) do
+            item.total_cost = item.total_cost + content.cost
+            item.total_weight = item.total_weight + content.weight
+        end
+    end
+    return item
 end

@@ -155,24 +155,19 @@ function get_decoration(is_soft)
         local gem_count = math.random(1, 2)
         local decoration_string = ""
         local gem_value = 0
+        local decors = {}
         for i=1, gem_count do
-            local gem_entry = get_gem()
-            gem_value = gem_value + gem_entry.cost
-            if decoration_string == "" then
-                decoration_string = decoration_string.."a "..gem_entry.name
-            else
-                decoration_string = decoration_string.." and a "..gem_entry.name
-            end
+            table.insert(decors, get_gem())
         end
-        return {cf=0, name=decoration_string, cost=gem_value}
+        return decors
     end
 
     if decoration_entry.motif == true then
         local motif_entry = motif_table[roll_string("1d, 1d, 1d")]
         local decoration_string = string.format("%s depicting a %s", decoration_entry.name, motif_entry)
-        return {cf=decoration_entry.cf, name=decoration_string, cost=0}
+        return {{cf=decoration_entry.cf, name=decoration_string, cost=0}}
     else
         local decoration_string = decoration_entry.name
-        return {cf=decoration_entry.cf, name=decoration_string, cost=0}
+        return {{cf=decoration_entry.cf, name=decoration_string, cost=0}}
     end
 end

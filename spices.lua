@@ -53,28 +53,31 @@ spices_table = {
 
 expand_table(spices_table)
 
+function get_contained_spice(treasure_entry)
+    local roll_result = roll_string("1d, 1d")
+    local spice_weight = roll_string("1d3") * treasure_entry.qty
+    local spice_entry = spices_table[roll_result]
+    local spice = get_spice(treasure_entry)
+    local item = {
+        name = container_vial.name,
+        cost = container_vial.cost,
+        weight = container_vial.weight, -- lbs
+        soft = container_vial.soft,
+        contents = {
+            spice
+        }
+    }
+    return item
+end
+
 function get_spice(treasure_entry)
     local roll_result = roll_string("1d, 1d")
     local spice_weight = roll_string("1d3") * treasure_entry.qty
     local spice_entry = spices_table[roll_result]
-    local item_name = string.format("%doz. vial of %s", spice_weight, spice_entry.name)
-    local cf = 1
-    -- handle decor
-    local decor_cost = 0
-    if treasure_entry.decor > 0 then
-        for i=1, treasure_entry.decor do
-            local decor_result = get_decoration(false)
-            cf = cf + decor_result.cf
-            if i == 1 then
-                item_name = item_name..", decorated with "..decor_result.name
-            else
-                item_name = item_name.." and "..decor_result.name
-            end
-            decor_cost = decor_cost + decor_result.cost
-        end
-    end
-    local item_cost = container_vial.cost * cf + spice_weight * spice_entry.value + decor_cost
-
-    local item_weight = container_vial.weight + spice_weight / 16
-    return {name=item_name, cost=item_cost, weight=item_weight}
+    local spice = {
+        name = spice_entry.name,
+        cost = spice_entry.value * spice_weight,
+        weight = spice_weight / 16 -- oz.
+    }
+    return spice
 end
