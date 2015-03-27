@@ -55,14 +55,14 @@ expand_table(spices_table)
 
 function get_contained_spice(treasure_entry)
     local roll_result = roll_string("1d, 1d")
-    local spice_weight = roll_string("1d3") * treasure_entry.qty
     local spice_entry = spices_table[roll_result]
     local spice = get_spice(treasure_entry)
+    local container = get_smallest_suitable_container(spice.weight * 16, true)
     local item = {
-        name = container_vial.name,
-        cost = container_vial.cost,
-        weight = container_vial.weight, -- lbs
-        soft = container_vial.soft,
+        name = container.name,
+        cost = container.cost,
+        weight = container.weight, -- lbs
+        soft = container.soft,
         contents = {
             spice
         }
