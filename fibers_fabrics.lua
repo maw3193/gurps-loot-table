@@ -125,6 +125,6 @@ function get_fabric(treasure_entry)
             cost = fabric_entry.cost * treasure_entry.qty,
             weight = fabric_entry.weight * treasure_entry.qty
         }
-        return fabric
+        return {fabric}
     end
 end

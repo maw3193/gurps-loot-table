@@ -167,44 +167,50 @@ expand_table(treasure_table)
 function get_treasure(rollstr)
     local roll_result = roll_string(rollstr or "1d, 1d, 1d")
     local treasure_entry = treasure_table[roll_result]
-    local item
+    local items
     -- Get specific item
     if treasure_entry.cb then
-        item = treasure_entry:cb()
+        items = treasure_entry:cb()
     else
-        item = treasure_entry
+        items = {treasure_entry}
     end
-    item.type = treasure_entry.name
     -- Get decorations
+    local decors = {}
     if treasure_entry.decor > 0 then
-        item.decorations = {}
         for i=1, treasure_entry.decor do
-            local decors = get_decoration(item.soft)
-            for j,decor in ipairs(decors) do
-                table.insert(item.decorations, decor)
+            local d = get_decoration(items[1].soft)
+            for j,decor in ipairs(d) do
+                table.insert(decors, decor)
             end
         end
     end
-    item.total_weight = item.weight
-    item.cf = 0
-    local decor_cost = 0
-    -- Decorations do not add weight, contents do.
-    if item.decorations then
-        for i,decoration in ipairs(item.decorations) do
-            if decoration.cf then
-                item.cf = item.cf + decoration.cf
+    for _,item in ipairs(items) do
+        item.type = treasure_entry.name
+        item.decorations = {}
+        for _,decor in ipairs(decors) do
+            table.insert(item.decorations, decor)
+        end
+        item.total_weight = item.weight
+        item.cf = 0
+        local decor_cost = 0
+        -- Decorations do not add weight, contents do.
+        if item.decorations then
+            for i,decoration in ipairs(item.decorations) do
+                if decoration.cf then
+                    item.cf = item.cf + decoration.cf
+                end
+                if decoration.cost then
+                    decor_cost = decor_cost + decoration.cost
+                end
             end
-            if decoration.cost then
-                decor_cost = decor_cost + decoration.cost
+        end
+        item.total_cost = item.cost * (1 + item.cf) + decor_cost
+        if item.contents then
+            for i,content in ipairs(item.contents) do
+                item.total_cost = item.total_cost + content.cost
+                item.total_weight = item.total_weight + content.weight
             end
         end
     end
-    item.total_cost = item.cost * (1 + item.cf) + decor_cost
-    if item.contents then
-        for i,content in ipairs(item.contents) do
-            item.total_cost = item.total_cost + content.cost
-            item.total_weight = item.total_weight + content.weight
-        end
-    end
-    return item
+    return items
 end

@@ -67,7 +67,7 @@ function get_contained_spice(treasure_entry)
             spice
         }
     }
-    return item
+    return {item}
 end
 
 function get_spice(treasure_entry)
