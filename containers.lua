@@ -1,38 +1,34 @@
 require "helpers"
 
--- capacity is in ounces. 20oz per pint, 8 pints per gallon
--- a cubic foot has 1000 ounces
-
--- How much in a small box, listed as the size of a large book.
--- 24HP/7HP = 3.42
--- 5000/3.42
-
+-- Capacity is in pounds, assuming density of water.
+-- how many ounces of water makes 1 pound?
+-- 1 pound is 16 ounces
 
 containers_table = {
-    ["1, 1-2"] = {name="Amphora",                            cost=60, weight=40, soft=false, capacity=20*8*6, sealed=true},
-    ["1, 3-4"] = {name="Barrel",                             cost=65, weight=20, soft=false, capacity=20*8*5, sealed=true},
-    ["1, 5-6"] = {name="Basket",                             cost=1.75, weight=1.5, soft=true, capacity=1000, sealed=false},
-    ["2, 1-2"] = {name="Bottle/Jar",                         cost=3, weight=1, soft=false, capacity=20*2, sealed=true},
-    ["2, 3-4"] = {name="Bottle/Jar, Small",                  cost=2, weight=0.5, soft=false, capacity=20, sealed=true},
-    ["2, 5"]   = {name="Box, Stone, Large",                  cost=1000, weight=220, soft=false, capacity=5000, sealed=false},
-    ["2, 6"]   = {name="Box, Stone, Small",                  cost=50, weight=6, soft=false, capacity=1500, sealed=false},
-    ["3, 1"]   = {name="Box, Wood, Large",                   cost=15, weight=2, soft=false, capacity=1500, sealed=false},
-    ["3, 2"]   = {name="Box, Wood, Small",                   cost=2, weight=0.25, soft=false, capacity=20, sealed=false},
-    ["3, 3"]   = {name="Cabinet",                            cost=150, weight=30, soft=false, capacity=8000, sealed=false},
-    ["3, 4"]   = {name="Cabinet, Compartmentalized",         cost=200, weight=16, soft=false, capacity=8000, sealed=false},
-    ["4, 1"]   = {name="Cage, Large",                        cost=120, weight=7, soft=false, capacity=2000, sealed=false},
-    ["4, 2"]   = {name="Cage, Small",                        cost=40, weight=3, soft=false, capacity=120, sealed=false},
-    ["4, 3"]   = {name="Cage, Small, Wood",                  cost=20, weight=2, soft=false, capacity=120, sealed=false},
-    ["4, 4"]   = {name="Canteen, Wood, 1 quart",             cost=10, weight=3, soft=false, capacity=20*2, sealed=true},
-    ["4, 5"]   = {name="Chest",                              cost=200, weight=40, soft=false, capacity=5000, sealed=false},
-    ["5, 1"]   = {name="Chest, Compartmentalized",           cost=300, weight=45, soft=false, capacity=5000, sealed=false},
-    ["5, 2-3"] = {name="Chest, Small",                       cost=100, weight=18, soft=false, capacity=2000, sealed=false},
-    ["5, 4-5"] = {name="Chest, Small, Compartmentalized",    cost=120, weight=20, soft=false, capacity=2000, sealed=false},
-    ["5, 6"]   = {name="Strongbox, Iron",                    cost=250, weight=15, soft=false, capacity=2000, sealed=false},
-    ["6, 1"]   = {name="Strongbox, Iron, Compartmentalized", cost=300, weight=18, soft=false, capacity=2000, sealed=false},
-    ["6, 2"]   = {name="Vial, Crystal",                      cost=5, weight=0.25, soft=false, capacity=10, sealed=true},
-    ["6, 3"]   = {name="Vial, Iron",                         cost=15, weight=0.5, soft=false, capacity=10, sealed=true},
-    ["6, 4"]   = {name="Wineskin, 1 Gallon",                 cost=10, weight=0.25, soft=true, capacity=20*8, sealed=true},
+    ["1, 1-2"] = {name="Amphora",                            cost=60, weight=40, soft=false, capacity=48, sealed=true},
+    ["1, 3-4"] = {name="Barrel",                             cost=65, weight=20, soft=false, capacity=40, sealed=true},
+    ["1, 5-6"] = {name="Basket",                             cost=1.75, weight=1.5, soft=true, capacity=60, sealed=false},
+    ["2, 1-2"] = {name="Bottle/Jar",                         cost=3, weight=1, soft=false, capacity=2, sealed=true},
+    ["2, 3-4"] = {name="Bottle/Jar, Small",                  cost=2, weight=0.5, soft=false, capacity=1, sealed=true},
+    ["2, 5"]   = {name="Box, Stone, Large",                  cost=1000, weight=220, soft=false, capacity=400, sealed=false},
+    ["2, 6"]   = {name="Box, Stone, Small",                  cost=50, weight=6, soft=false, capacity=150, sealed=false},
+    ["3, 1"]   = {name="Box, Wood, Large",                   cost=15, weight=2, soft=false, capacity=150, sealed=false},
+    ["3, 2"]   = {name="Box, Wood, Small",                   cost=2, weight=0.25, soft=false, capacity=1, sealed=false},
+    ["3, 3"]   = {name="Cabinet",                            cost=150, weight=30, soft=false, capacity=700, sealed=false},
+    ["3, 4"]   = {name="Cabinet, Compartmentalized",         cost=200, weight=16, soft=false, capacity=700, sealed=false},
+    ["4, 1"]   = {name="Cage, Large",                        cost=120, weight=7, soft=false, capacity=175, sealed=false},
+    ["4, 2"]   = {name="Cage, Small",                        cost=40, weight=3, soft=false, capacity=10, sealed=false},
+    ["4, 3"]   = {name="Cage, Small, Wood",                  cost=20, weight=2, soft=false, capacity=10, sealed=false},
+    ["4, 4"]   = {name="Canteen, Wood, 1 quart",             cost=10, weight=3, soft=false, capacity=2, sealed=true},
+    ["4, 5"]   = {name="Chest",                              cost=200, weight=40, soft=false, capacity=400, sealed=false},
+    ["5, 1"]   = {name="Chest, Compartmentalized",           cost=300, weight=45, soft=false, capacity=400, sealed=false},
+    ["5, 2-3"] = {name="Chest, Small",                       cost=100, weight=18, soft=false, capacity=100, sealed=false},
+    ["5, 4-5"] = {name="Chest, Small, Compartmentalized",    cost=120, weight=20, soft=false, capacity=100, sealed=false},
+    ["5, 6"]   = {name="Strongbox, Iron",                    cost=250, weight=15, soft=false, capacity=100, sealed=false},
+    ["6, 1"]   = {name="Strongbox, Iron, Compartmentalized", cost=300, weight=18, soft=false, capacity=100, sealed=false},
+    ["6, 2"]   = {name="Vial, Crystal",                      cost=5, weight=0.25, soft=false, capacity=6.25, sealed=true},
+    ["6, 3"]   = {name="Vial, Iron",                         cost=15, weight=0.5, soft=false, capacity=6.25, sealed=true},
+    ["6, 4"]   = {name="Wineskin, 1 Gallon",                 cost=10, weight=0.25, soft=true, capacity=100, sealed=true},
     ["6, 5"]   = {name="Cushioned", cf=1},
     ["6, 6"]   = {name="Secret Compartment", cf=2}
 }

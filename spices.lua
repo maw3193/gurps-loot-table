@@ -72,12 +72,12 @@ end
 
 function get_spice(treasure_entry)
     local roll_result = roll_string("1d, 1d")
-    local spice_weight = roll_string("1d3") * treasure_entry.qty
+    local spice_oz = roll_string("1d3") * treasure_entry.qty
     local spice_entry = spices_table[roll_result]
     local spice = {
         name = spice_entry.name,
-        cost = spice_entry.value * spice_weight,
-        weight = spice_weight / 16 -- oz.
+        cost = spice_entry.value * spice_oz,
+        weight = spice_oz / 16 -- store in lbs
     }
     return spice
 end
