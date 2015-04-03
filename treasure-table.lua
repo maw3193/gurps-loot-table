@@ -1,5 +1,6 @@
 require "spices"
 require "fibers_fabrics"
+require "other_materials"
 
 treasure_table = {
     ["1, 1, 1-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1, cb=get_contained_spice},
@@ -11,12 +12,12 @@ treasure_table = {
     ["1, 3, 1-6"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1, cb=get_fabric},
     ["1, 4, 1-3"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2, cb=get_fabric},
     ["1, 4, 4-6"] = {name="Fibers and Fabrics", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3, cb=get_fabric},
-    ["1, 5, 1-5"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1},
-    ["1, 5, 6"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1},
-    ["1, 6, 1-2"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2},
-    ["1, 6, 3"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=2},
-    ["1, 6, 4-5"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3},
-    ["1, 6, 6"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=3},
+    ["1, 5, 1-5"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1, cb=get_other_material},
+    ["1, 5, 6"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1, cb=get_other_material},
+    ["1, 6, 1-2"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2, cb=get_other_material},
+    ["1, 6, 3"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=2, cb=get_other_material},
+    ["1, 6, 4-5"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3, cb=get_other_material},
+    ["1, 6, 6"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=3, cb=get_other_material},
     ["2, 1, 1-3"] = {name="Household Items", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1},
     ["2, 1, 4"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=0, sup=0, qty=1},
     ["2, 1, 5"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=1, sup=0, qty=1},

@@ -58,6 +58,9 @@ function get_contained_spice(treasure_entry)
     local spice_entry = spices_table[roll_result]
     local spice = get_spice(treasure_entry)
     local container = get_smallest_suitable_container(spice.weight * 16, true)
+    if container == nil then
+        print("*** No suitable container found for spices")
+    end
     local item = {
         name = container.name,
         cost = container.cost,
