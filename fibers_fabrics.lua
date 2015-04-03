@@ -117,9 +117,9 @@ function get_fabric(treasure_entry)
     local roll_result = roll_string("1d, 1d")
     local fabric_entry = fabrics_table[roll_result]
     if fabric_entry.cb then
-        return deduplicate_item(fabric_entry:cb())
+        return (fabric_entry:cb())
     else
-        local fabric = deduplicate_item{
+        local fabric = {
             name = fabric_entry.name,
             cost = fabric_entry.cost * treasure_entry.qty,
             weight = fabric_entry.weight * treasure_entry.qty

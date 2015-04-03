@@ -58,7 +58,7 @@ function get_contained_spice(treasure_entry)
     local spice_entry = spices_table[roll_result]
     local spice = get_spice(treasure_entry)
     local container = get_smallest_suitable_container(spice.weight * 16, true)
-    local item = deduplicate_item{
+    local item = {
         name = container.name,
         cost = container.cost,
         weight = container.weight, -- lbs
@@ -74,7 +74,7 @@ function get_spice(treasure_entry)
     local roll_result = roll_string("1d, 1d")
     local spice_oz = roll_string("1d3") * treasure_entry.qty
     local spice_entry = spices_table[roll_result]
-    local spice = deduplicate_item{
+    local spice = {
         name = spice_entry.name,
         cost = spice_entry.value * spice_oz,
         weight = spice_oz / 16 -- store in lbs

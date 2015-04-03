@@ -1,6 +1,7 @@
 require "spices"
 require "fibers_fabrics"
 require "other_materials"
+require "household-items"
 local inspect = require "lib/inspect"
 
 treasure_table = expand_table{
@@ -19,16 +20,16 @@ treasure_table = expand_table{
     ["1, 6, 3"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=2, cb=get_other_material},
     ["1, 6, 4-5"] = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=3, cb=get_other_material},
     ["1, 6, 6"]   = {name="Other Materials", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=3, cb=get_other_material},
-    ["2, 1, 1-3"] = {name="Household Items", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1},
-    ["2, 1, 4"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=0, sup=0, qty=1},
-    ["2, 1, 5"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=1, sup=0, qty=1},
-    ["2, 1, 6"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=0, qty=1},
-    ["2, 2, 1"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=1, qty=1},
-    ["2, 2, 2"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=2, decor=2, sup=0, qty=1},
-    ["2, 2, 3"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=2, decor=2, sup=1, qty=1},
-    ["2, 2, 4"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=0, decor=3, sup=0, qty=1},
-    ["2, 2, 5"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=3, sup=0, qty=1},
-    ["2, 2, 6"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=0, qty=1},
+    ["2, 1, 1-3"] = {name="Household Items", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1, cb=get_household_item},
+    ["2, 1, 4"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=0, sup=0, qty=1, cb=get_household_item},
+    ["2, 1, 5"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=1, sup=0, qty=1, cb=get_household_item},
+    ["2, 1, 6"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=0, qty=1, cb=get_household_item},
+    ["2, 2, 1"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=1, qty=1, cb=get_household_item},
+    ["2, 2, 2"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=2, decor=2, sup=0, qty=1, cb=get_household_item},
+    ["2, 2, 3"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=2, decor=2, sup=1, qty=1, cb=get_household_item},
+    ["2, 2, 4"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=0, decor=3, sup=0, qty=1, cb=get_household_item},
+    ["2, 2, 5"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=3, sup=0, qty=1, cb=get_household_item},
+    ["2, 2, 6"]   = {name="Household Items", weight=1, cost=10, qual=0, ench=1, decor=2, sup=0, qty=1, cb=get_household_item},
     ["2, 3, 1-2"] = {name="Garments", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1},
     ["2, 3, 3-4"] = {name="Garments", weight=1, cost=10, qual=0, ench=1, decor=0, sup=0, qty=1},
     ["2, 3, 5"]   = {name="Garments", weight=1, cost=10, qual=0, ench=1, decor=1, sup=0, qty=1},
@@ -203,7 +204,7 @@ function get_treasure(rollstr)
             table.insert(item.decorations, decor)
         end
         item.total_weight = item.weight
-        item.cf = 0
+        item.cf = item.cf or 0
         local decor_cost = 0
         -- Decorations do not add weight, contents do.
         if item.decorations then
