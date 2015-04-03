@@ -48,5 +48,5 @@ function get_gem()
     local gem_entry = gems_table[roll_result]
     local gem_value = (carat * carat + 4 * carat) * gem_entry.value
     local gem_name = string.format("%2.2f Carat %s", carat, gem_entry.name)
-    return {name=gem_name, cost=gem_value, weight=0}
+    return deduplicate_item{name=gem_name, cost=gem_value, weight=0}
 end

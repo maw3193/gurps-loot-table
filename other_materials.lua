@@ -49,7 +49,7 @@ function get_other_material(treasure_entry)
     local items
     container = get_smallest_suitable_container(loose_item.weight, true)
     if container ~= nil then
-        items = {{
+        items = {deduplicate_item{
             name = container.name,
             cost = container.cost,
             weight = container.weight,
@@ -69,7 +69,7 @@ function get_other_material(treasure_entry)
                 cost = container.cost,
                 weight = container.weight,
                 soft = container.soft,
-                contents = {{
+                contents = {deduplicate_item{
                     name = loose_item.name,
                     cost = loose_item.value * contents_weight,
                     weight = contents_weight

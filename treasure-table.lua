@@ -1,8 +1,9 @@
 require "spices"
 require "fibers_fabrics"
 require "other_materials"
+local inspect = require "lib/inspect"
 
-treasure_table = {
+treasure_table = expand_table{
     ["1, 1, 1-5"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1, cb=get_contained_spice},
     ["1, 1, 6"]   = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=1, sup=0, qty=1, cb=get_contained_spice},
     ["1, 2, 1-2"] = {name="Spices", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=2, cb=get_contained_spice},
@@ -163,7 +164,17 @@ treasure_table = {
     ["6, 6, 3-6"] = {name="Rare Artifacts", weight=1, cost=10, qual=0, ench=0, decor=0, sup=0, qty=1},
 }
 
-expand_table(treasure_table)
+all_items_table = {}
+
+function deduplicate_item(item)
+    local itemstr = inspect(item)
+    if all_items_table[itemstr] then
+        return all_items_table[itemstr]
+    else
+        all_items_table[itemstr] = item
+        return item
+    end
+end
 
 function get_treasure(rollstr)
     local roll_result = roll_string(rollstr or "1d, 1d, 1d")
@@ -185,7 +196,7 @@ function get_treasure(rollstr)
             end
         end
     end
-    for _,item in ipairs(items) do
+    for i,item in ipairs(items) do
         item.type = treasure_entry.name
         item.decorations = {}
         for _,decor in ipairs(decors) do
@@ -212,6 +223,7 @@ function get_treasure(rollstr)
                 item.total_weight = item.total_weight + content.weight
             end
         end
+        items[i] = deduplicate_item(item)
     end
     return items
 end
