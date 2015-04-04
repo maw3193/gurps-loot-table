@@ -12,10 +12,12 @@ print("Rolled with seed "..seed)
 
 local item_count = arg[1] or 10
 
+local items = {}
+
 for i=1, item_count do
-    print("Item "..i..": "..inspect(get_treasure("1d, 1d, 1d")))
-    --print(inspect(get_spice{qty=math.random(1, 3),
-    --                        decor=math.random(0, 2)}))
+    for _,v in ipairs(get_treasure("1-6, 1-6, 1-6")) do
+        table.insert(items, v)
+    end
 end
 
-
+print(inspect(stackify_table(items)))

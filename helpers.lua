@@ -91,3 +91,20 @@ function write_table(t)
     end
     return table.concat(lines)
 end
+
+-- Stackify table
+function stackify_table(t)
+    local unique_items = {}
+    for i,v in ipairs(t) do
+        if not unique_items[v] then
+            unique_items[v] = 1
+        else
+            unique_items[v] = unique_items[v] + 1
+        end
+    end
+    t = {}
+    for k,v in pairs(unique_items) do
+        table.insert(t, {qty=v, item=k})
+    end
+    return t
+end
