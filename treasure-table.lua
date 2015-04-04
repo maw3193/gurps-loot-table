@@ -2,6 +2,7 @@ require "spices"
 require "fibers_fabrics"
 require "other_materials"
 require "household-items"
+require "supernatural-embellishment"
 local inspect = require "lib/inspect"
 
 treasure_table = expand_table{
@@ -185,7 +186,7 @@ function get_treasure(rollstr)
     if treasure_entry.cb then
         items = treasure_entry:cb()
     else
-        items = {treasure_entry}
+         return {treasure_entry}
     end
     -- Get decorations
     local decors = {}
@@ -197,25 +198,39 @@ function get_treasure(rollstr)
             end
         end
     end
+
+    -- Get supernatural embellishments, I'm only expecting one
+    local supernaturals = {}
+    if treasure_entry.sup > 0 then
+        for i=1, treasure_entry.sup do
+            table.insert(supernaturals, get_supernatural_embellishment())
+        end
+    end
+
     for i,item in ipairs(items) do
         item.type = treasure_entry.name
-        item.decorations = {}
+        item.decorations = item.decorations or {}
         for _,decor in ipairs(decors) do
             table.insert(item.decorations, decor)
+        end
+        item.supernaturals = item.supernaturals or {}
+        for _,sup in ipairs(supernaturals) do
+            table.insert(item.supernaturals, sup)
         end
         item.total_weight = item.weight
         item.cf = item.cf or 0
         local decor_cost = 0
         -- Decorations do not add weight, contents do.
-        if item.decorations then
-            for i,decoration in ipairs(item.decorations) do
-                if decoration.cf then
-                    item.cf = item.cf + decoration.cf
-                end
-                if decoration.cost then
-                    decor_cost = decor_cost + decoration.cost
-                end
+        for _,decoration in ipairs(item.decorations) do
+            if decoration.cf then
+                item.cf = item.cf + decoration.cf
             end
+            if decoration.cost then
+                decor_cost = decor_cost + decoration.cost
+            end
+        end
+        for _,supernatural in ipairs(item.supernaturals) do
+            item.cf = item.cf + supernatural.cf
         end
         item.total_cost = item.cost * (1 + item.cf) + decor_cost
         if item.contents then
