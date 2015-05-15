@@ -1,0 +1,5 @@
+* Generate everything from Treasure Tables
+* Tidy up global pollution in "require"s.
+* Add some kind of filtering, so at the very least it doesn't give boring items.
+* Give a short, descriptive line for each item.
+* Generate narratives, as well.
