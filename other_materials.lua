@@ -6,7 +6,7 @@ local inspect = require "lib/inspect"
 
 other_materials_table = expand_table{
     ["1, 1"] = {name="Ale", value=5, weight=10},
-    ["1, 2"] = {name="Dstilled Liquor", value=16, weight=20/16},
+    ["1, 2"] = {name="Distilled Liquor", value=16, weight=20/16},
     ["1, 3"] = {name="Flavoured Ale", value=7.5, weight=10},
     ["1, 4"] = {name="Flavoured Brandy", value=20, weight=20/16},
     ["1, 5"] = {name="Kumiz", value=15, weight=10},
