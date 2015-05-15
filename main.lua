@@ -15,8 +15,13 @@ local item_count = arg[1] or 10
 local items = {}
 
 for i=1, item_count do
-    for _,v in ipairs(get_treasure("1-6, 1-6, 1-6")) do
+    item_returned = false
+    for _,v in ipairs(get_treasure("1d, 1d, 1d")) do
+        item_returned = true
         table.insert(items, v)
+    end
+    if not item_returned then
+        error("i="..i..", ERROR! No item returned")
     end
 end
 
