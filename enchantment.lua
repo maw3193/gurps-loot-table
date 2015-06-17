@@ -1,8 +1,17 @@
+function get_enchantment_entry(t_ent)
+    local entry = t_ent.t[roll_string(t_ent.roll)]
+    if entry.cb then
+        return entry:cb()
+    else
+        return entry
+    end
+end
+
 enchantment_power_table = expand_table{
-    ["1-2"] = {power=1, cost=10000},
-    ["3-4"] = {power=2, cost=20000},
-    ["5"]   = {power=3, cost=40000},
-    ["6"]   = {power=4, cost=80000}
+    ["1-2"] = {name="Power 1", cost=10000},
+    ["3-4"] = {name="Power 2", cost=20000},
+    ["5"]   = {name="Power 3", cost=40000},
+    ["6"]   = {name="Power 4", cost=80000}
 }
 
 enchantment_reserve_table = expand_table{
@@ -20,8 +29,47 @@ enchantment_reserve_table = expand_table{
     ["4-6, 6"] = "Tears"
 }
 
-function enchantment_add_power()
+local function name_is_meta(name)
+    if string.match(name, "^Power") or
+        name == "Dedicated Reserve" or
+        name == "Regenerating Reserve" or
+        name == "Rechargeable Reserve" then
+        return true
+    else
+        return false
+    end
+end
 
+local function get_non_meta_enchantment(ench_table, roll)
+    local spell = get_enchantment_entry{t=ench_table, roll=roll}
+    while name_is_meta(spell.name) do
+        spell = get_enchantment_entry{t=ench_table, roll=roll}
+    end
+end
+
+function enchantment_add_power(ench_table, roll)
+    local power = get_enchantment_entry{t=enchantment_power_table, roll="1d"}
+    local spell = get_non_meta_enchantment(ench_table, roll)
+    return {power, spell}
+end
+
+
+function enchantment_attack_add_power()
+    return enchantment_add_power(enchantment_attack_table, "1d, 1d, 1d")
+end
+
+function enchantment_add_reserve(table_entry, ench_table, roll)
+    local spell = get_non_meta_enchantment(ench_table, roll)
+    local reserve_name = table_entry.name.." "..spell.reserve
+    local reserve_cost = table_entry.cost * spell.reserve
+    local reserve = {name=reserve_name, cost=reserve_cost}
+    -- dedicated reserve, like a power item
+    -- regenerating reserve, like a powerstone
+    -- rechargeable reserve, from a reserve.
+end
+
+function enchantment_attack_add_reserve(reserve)
+    return enchantment_add_reserve(reserve, enchantment_attack_table, "1d, 1d, 1d")
 end
 
 enchantment_attack_table = expand_table{
@@ -80,7 +128,7 @@ enchantment_attack_table = expand_table{
     ["4-6, 5, 2"]   = {name="Stone Missile",         cost=8000, reserve=6},
     ["4-6, 5, 3"]   = {name="Stun",                  cost=10000, reserve=12},
     ["4-6, 5, 4"]   = {name="Sunbolt",               cost=16000, reserve=6},
-    ["4-6, 5, 5-6"] = {name="Power",                 cost=0, reserve=0}, -- TODO SPECIAL CASE
+    ["4-6, 5, 5-6"] = {name="Power",                 cost=0, reserve=0, cb=enchantment_attack_add_power},
     ["4-6, 6, 1-2"] = {name="Dedicated Reserve",     cost=40, reserve=0}, -- TODO SPECIAL CASE
     ["4-6, 6, 3-4"] = {name="Regenerating Reserve",  cost=80, reserve=0}, -- TODO SPECIAL CASE
     ["4-6, 6, 5-6"] = {name="Rechargeable Reserve",  cost=100, reserve=0} -- TODO SPECIAL CASE
@@ -101,15 +149,6 @@ enchantment_environmental_table = expand_table{
 enchantment_influence_table = expand_table{
     ["1-6, 1-6"] = {name="Generic Influence Enchantment", cost=0, reserve=0}
 }
-
-function get_enchantment_entry(t_ent)
-    local entry = t_ent.t[roll_string(t_ent.roll)]
-    if entry.cb then
-        return entry:cb()
-    else
-        return entry
-    end
-end
 
 enchantment_type_table = expand_table{
     ["1"]   = {t=enchantment_attack_table, roll="1d, 1d, 1d", cb=get_enchantment_entry},

@@ -16,7 +16,7 @@ local items = {}
 
 for i=1, item_count do
     item_returned = false
-    for _,v in ipairs(get_treasure("1d, 1d, 1d")) do
+    for _,v in ipairs(get_treasure("2, 2, 2")) do
         item_returned = true
         table.insert(items, v)
     end

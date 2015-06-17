@@ -3,6 +3,7 @@ require "fibers_fabrics"
 require "other_materials"
 require "household-items"
 require "supernatural-embellishment"
+require "enchantment"
 local inspect = require "lib/inspect"
 
 treasure_table = expand_table{
@@ -199,6 +200,14 @@ function get_treasure(rollstr)
         end
     end
 
+    -- Get Enchantments and Curses
+    local enchants = {}
+    local curses = {}
+    if treasure_entry.ench > 0 then
+        -- first item in list determines what enchantments will be
+        enchants, curses = get_enchantments(items[1], treasure_entry.ench)
+    end
+
     -- Get supernatural embellishments, I'm only expecting one
     local supernaturals = {}
     if treasure_entry.sup > 0 then
@@ -212,6 +221,10 @@ function get_treasure(rollstr)
         item.decorations = item.decorations or {}
         for _,decor in ipairs(decors) do
             table.insert(item.decorations, decor)
+        end
+        item.enchants = item.enchants or {}
+        for _,ench in ipairs(enchants) do
+            table.insert(item.enchants, ench)
         end
         item.supernaturals = item.supernaturals or {}
         for _,sup in ipairs(supernaturals) do
